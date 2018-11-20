@@ -30,20 +30,24 @@ public class EndorsedFilter implements DependencyFilter {
 
     @Override
     public boolean accept(DependencyNode dn, List<DependencyNode> list) {
-        Artifact a = dn.getDependency().getArtifact();
-        if ("jaxws-api".equals(a.getArtifactId())
-                || "jaxb-api".equals(a.getArtifactId())
-                || "saaj-api".equals(a.getArtifactId())
-                || "jsr181-api".equals(a.getArtifactId())
-                || "javax.annotation".equals(a.getArtifactId())
-                || "javax.annotation-api".equals(a.getArtifactId())
-                || "webservices-api".equals(a.getArtifactId())) {
-            return true;
-        } else if (a.getArtifactId().startsWith("javax.xml.ws")
-                || a.getArtifactId().startsWith("javax.xml.bind")) {
-            return true;
+        if (System.getProperty("java.specification.version").startsWith("11")) {
+            return false;
+        } else {
+            Artifact a = dn.getDependency().getArtifact();
+            if ("jaxws-api".equals(a.getArtifactId())
+                    || "jaxb-api".equals(a.getArtifactId())
+                    || "saaj-api".equals(a.getArtifactId())
+                    || "jsr181-api".equals(a.getArtifactId())
+                    || "javax.annotation".equals(a.getArtifactId())
+                    || "javax.annotation-api".equals(a.getArtifactId())
+                    || "webservices-api".equals(a.getArtifactId())) {
+                return true;
+            } else if (a.getArtifactId().startsWith("javax.xml.ws")
+                    || a.getArtifactId().startsWith("javax.xml.bind")) {
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
 }
